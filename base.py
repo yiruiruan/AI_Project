@@ -42,8 +42,7 @@ def score_words(words_to_id, id_to_words, words_to_score, graph):
   
   return words_to_score
 
-def main(argv):
-  file_name = argv[1]
+def extract(file_name):
   f = open(file_name, "r")
   body = f.read()
 
@@ -132,8 +131,4 @@ def main(argv):
   
   # Result is an array of candidate phrases ordered by score
   # Get the top k by returning result[:k]
-  print(result[:5])
-  return result[:5]
-
-if __name__ == "__main__":
-  main(sys.argv)
+  return result[:10]
