@@ -1,7 +1,6 @@
 import re
 import sys
 import string
-import numpy as np
 from stopwords import stopwords
 
 sentence_splits = [".", ",", "?", "!", "\n", "\t", ";"]
