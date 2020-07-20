@@ -5,9 +5,10 @@ from base import extract
 from rake import rake
 from textrank import textrank
 from window import extract as window
+from window_w_tf_idf import extract as window_w_tf_idf
 
 def results(algo=None):
-  # algo can be 'rake', 'textrank', 'window', 'base' (default)
+  # algo can be 'rake', 'textrank', 'window', ''window_w_tf_idf, 'base' (default)
   print("algorithm:", algo)
 
   samples = 500 # up to 2000
@@ -33,6 +34,8 @@ def results(algo=None):
       extracted = textrank(doc)
     elif algo == 'window':
       extracted = window(doc)
+    elif algo == 'window_w_tf_idf':
+      extracted = window_w_tf_idf(doc)
     else:
       extracted = extract(doc)
 
