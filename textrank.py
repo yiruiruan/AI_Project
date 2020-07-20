@@ -1,7 +1,7 @@
 import spacy
 import pytextrank
 import re
-from common import num_words
+from common import num_top_words
 
 def textrank(file_name):
   f = open(file_name, "r")
@@ -17,6 +17,6 @@ def textrank(file_name):
 
   doc = nlp(text)
   top_ranked = [p.text for p in doc._.phrases]
-  return top_ranked[:num_words]
+  return top_ranked[:num_top_words]
 
 # print(textrank('Inspec/docsutf8/2.txt'))

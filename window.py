@@ -1,7 +1,7 @@
 import re
 import sys
 import string
-from common import num_words, stopwords
+from common import num_top_words, stopwords
 
 sentence_splits = [".", ",", "?", "!", "\n", "\t", ";"]
 word_splits = [" ", "/", "[", "]", "(", ")", "\"", "%"]
@@ -138,4 +138,4 @@ def extract(file_name):
   
   # Result is an array of candidate phrases ordered by score
   # Get the top k by returning result[:k]
-  return result[:num_words]
+  return result[:num_top_words]

@@ -1,4 +1,4 @@
-num_words = 10
+num_top_words = 10
 
 stopwords = set([
   "i",
