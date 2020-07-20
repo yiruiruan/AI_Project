@@ -4,9 +4,10 @@ import re
 from base import extract
 from rake import rake
 from textrank import textrank
+from window import extract as window
 
 def results(algo=None):
-  # algo can be 'rake' or 'textrank'
+  # algo can be 'rake', 'textrank', 'window', 'base' (default)
   print("algorithm:", algo)
 
   samples = 500 # up to 2000
@@ -30,6 +31,8 @@ def results(algo=None):
       extracted = rake(doc)
     elif algo == 'textrank':
       extracted = textrank(doc)
+    elif algo == 'window':
+      extracted = window(doc)
     else:
       extracted = extract(doc)
 
@@ -45,7 +48,7 @@ def results(algo=None):
   print("precision: {}, recall: {}, F-measure: {}".format(*avg_res))
 
 def main(argv):
-  algo = argv[1] if len(argv) > 1 else None
+  algo = argv[1] if len(argv) > 1 else 'base'
   results(algo=algo)
 
 if __name__ == "__main__":
