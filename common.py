@@ -1,3 +1,4 @@
+num_words = 10
 
 stopwords = set([
   "i",
@@ -129,6 +130,4 @@ stopwords = set([
   "no",
 ])
 
-punctuation = set([
-  ""
-])
+punctuation = [".", ",", "?", "!", "\n", "\t", ";", "/", "[", "]", "(", ")", "\"", "%"]
