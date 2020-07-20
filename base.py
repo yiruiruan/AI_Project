@@ -100,7 +100,6 @@ def extract(file_name):
       curr = clean(tokens[i])
 
       if curr in stopwords or curr == "":
-        prev = ""
         continue
       
       # Increase freq of curr
