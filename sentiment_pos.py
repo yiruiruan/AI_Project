@@ -1,6 +1,9 @@
 import re
 import sys
 import string
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from collections import Counter
 from common import num_top_words, stopwords
 
 sentence_splits = [".", ",", "?", "!", "\n", "\t", ";"]
@@ -19,7 +22,7 @@ def clean(string):
 
   return string
 
-def score_words(words_to_id, id_to_words, words_to_score, graph):
+def score_words(words_to_id, id_to_words, words_to_score, graph, words_analysis):
   # Returns the words_to_score dictionary filled in
   # Implementation of this is up to us
   # Baseline is RAKE's measure
@@ -39,7 +42,15 @@ def score_words(words_to_id, id_to_words, words_to_score, graph):
     degree -= freq
 
     words_to_score[w] = degree/(1 if freq == 0 else freq)
-  
+
+    # Sentiment
+    words_to_score[w] += 6 * words_analysis[w]['sentiment']
+
+    # Part-of-speech
+    pos = Counter(words_analysis[w]['pos']).most_common(1)[0]
+    pos_prioritize = {'NN', 'NNS', 'NNP'} # singular noun, plural noun, proper noun
+    words_to_score[w] += 6 if pos[0] in pos_prioritize else 0
+
   return words_to_score
 
 def extract(file_name):
@@ -59,11 +70,23 @@ def extract(file_name):
   # Map words and their score
   words_to_score = {}
 
+  # Map words to semtiment and part-of-speech
+  words_analysis = {}
+
+  sid = SentimentIntensityAnalyzer()
+
   # Split by sentences
   sentences = split(body, sentence_splits)
   for sentence in sentences:
     # Split by whitespace
     tokens = split(sentence, word_splits)
+
+    # Get sentiment for the sentence
+    sentiment = sid.polarity_scores(sentence)
+
+    # Part-of-speech tagging by token
+    pos_tokens = list(filter(None, tokens))
+    pos = nltk.pos_tag(pos_tokens)
 
     p = ""
     for t in tokens:
@@ -82,6 +105,18 @@ def extract(file_name):
             words_to_score[cleaned] = 0
             id_to_words[index] = cleaned
             index += 1
+    
+    # Store sentiment and part-of-speech results in words_analysis
+    for t in pos:
+      cleaned = clean(t[0])
+      if cleaned in words_analysis:
+        words_analysis[cleaned]['sentiment'] += abs(sentiment['compound'])
+        words_analysis[cleaned]['pos'].append(t[1])
+      else:
+        words_analysis[cleaned] = {
+          'sentiment': abs(sentiment['compound']),
+          'pos': [t[1]]
+        }
 
   # Separate body into words
   num_words = len(words_to_score)
@@ -113,7 +148,7 @@ def extract(file_name):
       # Increase count of prev followed by curr
       graph[words_to_id[prev]][words_to_id[curr]] += 1
   
-  words_to_score = score_words(words_to_id, id_to_words, words_to_score, graph)
+  words_to_score = score_words(words_to_id, id_to_words, words_to_score, graph, words_analysis)
 
   for c in candidate_phrases:
     score = 0
@@ -132,3 +167,5 @@ def extract(file_name):
   # Result is an array of candidate phrases ordered by score
   # Get the top k by returning result[:k]
   return result[:num_top_words]
+
+# print(extract('Inspec/docsutf8/2.txt'))

@@ -45,6 +45,8 @@ def score_words(words_to_id, id_to_words, words_to_score, graph):
 def extract(file_name):
   f = open(file_name, "r")
   body = f.read()
+  whitespace = re.compile(r"\s+")
+  body = whitespace.sub(" ", body).strip()
 
   # Key is the phrase, val is the score
   candidate_phrases = {}

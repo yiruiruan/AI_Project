@@ -6,10 +6,13 @@ from rake import rake
 from textrank import textrank
 from window import extract as window
 from window_w_tf_idf import extract as window_w_tf_idf
+from tf_idf import extract as tf_idf
+from sentiment_pos import extract as sentiment_pos
+
+ALGOS = {'rake', 'textrank', 'window', 'window_w_tf_idf', 'td_idf', 'sentiment_pos', 'base'} # 'base' is default
 
 def results(algo=None):
-  # algo can be 'rake', 'textrank', 'window', ''window_w_tf_idf, 'base' (default)
-  print("algorithm:", algo)
+  print("algorithm:", algo if algo in ALGOS else None)
 
   samples = 500 # up to 2000
   print("sample size:", samples)
@@ -36,6 +39,10 @@ def results(algo=None):
       extracted = window(doc)
     elif algo == 'window_w_tf_idf':
       extracted = window_w_tf_idf(doc)
+    elif algo == 'tf_idf':
+      extracted = tf_idf(doc)
+    elif algo == 'sentiment_pos':
+      extracted = sentiment_pos(doc)
     else:
       extracted = extract(doc)
 

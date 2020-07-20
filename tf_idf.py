@@ -19,6 +19,8 @@ def clean(string):
 
   return string
 
+tf_dict = {}
+
 def score_words(words_to_id, id_to_words, words_to_score, graph):
   # Returns the words_to_score dictionary filled in
   # Implementation of this is up to us
@@ -37,6 +39,8 @@ def score_words(words_to_id, id_to_words, words_to_score, graph):
       degree += col
     
     degree -= freq
+
+    degree = float(degree * tf_dict[w])
 
     words_to_score[w] = degree/(1 if freq == 0 else freq)
   
@@ -92,17 +96,34 @@ def extract(file_name):
   graph = [[0 for i in range(num_words)] for j in range(num_words)]
 
   # Go through again to compute co-occurrences
-  # This is only for directly adjacent co-occurrence
+  # This for a window of 3 words, thus each with <= 1 word in between
   for sentence in sentences:
     tokens = split(sentence, word_splits)
     num_t = len(tokens)
     prev = clean(tokens[0])
+    if (num_t > 0):
+        curr = clean(tokens[0])
+        if curr in stopwords or curr == "":
+          curr = ""
+        else:
+          # update the dictionary for TF
+          if curr in tf_dict:
+            tf_dict[curr] = tf_dict[curr] + 1
+          else:
+            tf_dict[curr] = 1
+            graph[words_to_id[curr]][words_to_id[curr]] += 1
     for i in range(1, num_t):
       prev = clean(tokens[i-1])
       curr = clean(tokens[i])
 
       if curr in stopwords or curr == "":
         continue
+
+      # update the dictionary for TF
+      if curr in tf_dict:
+        tf_dict[curr] = tf_dict[curr] + 1
+      else:
+        tf_dict[curr] = 1
       
       # Increase freq of curr
       graph[words_to_id[curr]][words_to_id[curr]] += 1
@@ -112,6 +133,10 @@ def extract(file_name):
 
       # Increase count of prev followed by curr
       graph[words_to_id[prev]][words_to_id[curr]] += 1
+
+  for ele in tf_dict:
+    tf_dict[ele] = tf_dict[ele] / num_words
+
   
   words_to_score = score_words(words_to_id, id_to_words, words_to_score, graph)
 
