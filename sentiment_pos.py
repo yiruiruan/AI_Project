@@ -1,17 +1,9 @@
-import nltk
-# nltk.download('vader_lexicon')
-# nltk.download('averaged_perceptron_tagger')
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
-from collections import Counter
-
-
-
-# print(nltk.pos_tag(["I", "must", "present"]))
-
-
 import re
 import sys
 import string
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from collections import Counter
 from common import num_top_words, stopwords
 
 sentence_splits = [".", ",", "?", "!", "\n", "\t", ";"]
@@ -88,7 +80,6 @@ def extract(file_name):
   for sentence in sentences:
     # Split by whitespace
     tokens = split(sentence, word_splits)
-
 
     # Get sentiment for the sentence
     sentiment = sid.polarity_scores(sentence)
