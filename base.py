@@ -100,14 +100,12 @@ def extract(file_name):
       curr = clean(tokens[i])
 
       if curr in stopwords or curr == "":
-        prev = ""
         continue
       
       # Increase freq of curr
       graph[words_to_id[curr]][words_to_id[curr]] += 1
 
       if prev in stopwords or prev == "":
-        prev = ""
         continue
 
       # Increase count of prev followed by curr
