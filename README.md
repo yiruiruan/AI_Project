@@ -13,13 +13,13 @@
   ```
 
 ## Run Algorithms on Text Samples
-Use the following command to run our keyword extraction algorithm on text samples and get the precision, recall, and F-measure:
+Use the following command to run a keyword extraction algorithm on text samples and get the precision, recall, and F-measure:
 ```
-python test.py
+python test.py <algo>
 ```
+`algo` can be `base` (default), `window`, `sentiment_pos`, `rake`, `textrank`.
 
-To run an existing keyword extraction algorithm and get the results, use one of the following commands:
+For example,
 ```
-python test.py rake
-python test.py textrank
+python test.py sentiment_pos
 ```
