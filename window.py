@@ -95,6 +95,24 @@ def extract(file_name):
     tokens = split(sentence, word_splits)
     num_t = len(tokens)
     prev = clean(tokens[0])
+    if (num_t > 0):
+        curr = clean(tokens[1])
+        if curr in stopwords or curr == "":
+          curr = ""
+        else:
+          graph[words_to_id[curr]][words_to_id[curr]] += 1
+    if (num_t > 1):
+      prev = prev = clean(tokens[0])
+      curr = clean(tokens[1])
+      if curr in stopwords or curr == "":
+        curr = ""
+      else:
+        graph[words_to_id[curr]][words_to_id[curr]] += 1
+        if prev in stopwords or prev == "":
+          prev = ""
+        else:
+          graph[words_to_id[prev]][words_to_id[curr]] += 1
+
     for i in range(2, num_t):
       prev_2 = clean(tokens[i-2])
       prev = clean(tokens[i-1])
