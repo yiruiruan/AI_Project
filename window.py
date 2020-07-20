@@ -96,7 +96,7 @@ def extract(file_name):
     num_t = len(tokens)
     prev = clean(tokens[0])
     if (num_t > 0):
-        curr = clean(tokens[1])
+        curr = clean(tokens[0])
         if curr in stopwords or curr == "":
           curr = ""
         else:
