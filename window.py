@@ -113,7 +113,6 @@ def extract(file_name):
         graph[words_to_id[prev]][words_to_id[curr]] += 1
 
       if prev_2 in stopwords or prev_2 == "":
-        prev_2 = ""
         continue
 
       # Increase count of prev followed by curr
