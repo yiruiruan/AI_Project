@@ -5,10 +5,12 @@ from base import extract
 from rake import rake
 from textrank import textrank
 from window import extract as window
+from sentiment_pos import extract as sentiment_pos
+
+ALGOS = {'rake', 'textrank', 'window', 'sentiment_pos', 'base'} # 'base' is default
 
 def results(algo=None):
-  # algo can be 'rake', 'textrank', 'window', 'base' (default)
-  print("algorithm:", algo)
+  print("algorithm:", algo if algo in ALGOS else None)
 
   samples = 500 # up to 2000
   print("sample size:", samples)
@@ -33,6 +35,8 @@ def results(algo=None):
       extracted = textrank(doc)
     elif algo == 'window':
       extracted = window(doc)
+    elif algo == 'sentiment_pos':
+      extracted = sentiment_pos(doc)
     else:
       extracted = extract(doc)
 
