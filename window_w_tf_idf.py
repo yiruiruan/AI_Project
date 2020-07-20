@@ -19,6 +19,8 @@ def clean(string):
 
   return string
 
+tf_dict = {}
+
 def score_words(words_to_id, id_to_words, words_to_score, graph):
   # Returns the words_to_score dictionary filled in
   # Implementation of this is up to us
@@ -37,6 +39,8 @@ def score_words(words_to_id, id_to_words, words_to_score, graph):
       degree += col
     
     degree -= freq
+
+    degree *= tf_dict[w]
 
     words_to_score[w] = degree/(1 if freq == 0 else freq)
   
@@ -117,6 +121,12 @@ def extract(file_name):
       prev_2 = clean(tokens[i-2])
       prev = clean(tokens[i-1])
       curr = clean(tokens[i])
+      
+      # update the dictionary for TF
+      if curr in tf_dict:
+        tf_dict[curr] = tf_dict[curr] + 1
+      else:
+        tf_dict[curr] = 1
 
       if curr in stopwords or curr == "":
         continue
@@ -135,6 +145,9 @@ def extract(file_name):
 
       # Increase count of prev followed by curr
       graph[words_to_id[prev_2]][words_to_id[curr]] += 1
+
+  for ele in tf_dict:
+    ele = ele / num_words
 
   
   words_to_score = score_words(words_to_id, id_to_words, words_to_score, graph)
