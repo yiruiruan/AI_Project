@@ -1,5 +1,5 @@
 from rake_nltk import Rake
-from common import num_words, stopwords, punctuation
+from common import num_top_words, stopwords, punctuation
 
 def rake(file_name):
   f = open(file_name, "r")
@@ -9,6 +9,6 @@ def rake(file_name):
     punctuations=punctuation
   )
   r.extract_keywords_from_text(text)
-  return r.get_ranked_phrases()[:num_words]
+  return r.get_ranked_phrases()[:num_top_words]
 
 # print(rake('Inspec/docsutf8/2.txt'))
