@@ -40,7 +40,7 @@ def score_words(words_to_id, id_to_words, words_to_score, graph):
     
     degree -= freq
 
-    degree *= tf_dict[w]
+    degree = float(degree * tf_dict[w])
 
     words_to_score[w] = degree/(1 if freq == 0 else freq)
   
@@ -49,6 +49,8 @@ def score_words(words_to_id, id_to_words, words_to_score, graph):
 def extract(file_name):
   f = open(file_name, "r")
   body = f.read()
+  whitespace = re.compile(r"\s+")
+  body = whitespace.sub(" ", body).strip()
 
   # Key is the phrase, val is the score
   candidate_phrases = {}
@@ -104,13 +106,23 @@ def extract(file_name):
         if curr in stopwords or curr == "":
           curr = ""
         else:
-          graph[words_to_id[curr]][words_to_id[curr]] += 1
+          # update the dictionary for TF
+          if curr in tf_dict:
+            tf_dict[curr] = tf_dict[curr] + 1
+          else:
+            tf_dict[curr] = 1
+            graph[words_to_id[curr]][words_to_id[curr]] += 1
     if (num_t > 1):
       prev = prev = clean(tokens[0])
       curr = clean(tokens[1])
       if curr in stopwords or curr == "":
         curr = ""
       else:
+        # update the dictionary for TF
+        if curr in tf_dict:
+          tf_dict[curr] = tf_dict[curr] + 1
+        else:
+          tf_dict[curr] = 1
         graph[words_to_id[curr]][words_to_id[curr]] += 1
         if prev in stopwords or prev == "":
           prev = ""
@@ -121,15 +133,15 @@ def extract(file_name):
       prev_2 = clean(tokens[i-2])
       prev = clean(tokens[i-1])
       curr = clean(tokens[i])
-      
+
+      if curr in stopwords or curr == "":
+        continue
+
       # update the dictionary for TF
       if curr in tf_dict:
         tf_dict[curr] = tf_dict[curr] + 1
       else:
         tf_dict[curr] = 1
-
-      if curr in stopwords or curr == "":
-        continue
       
       # Increase freq of curr
       graph[words_to_id[curr]][words_to_id[curr]] += 1
@@ -147,7 +159,7 @@ def extract(file_name):
       graph[words_to_id[prev_2]][words_to_id[curr]] += 1
 
   for ele in tf_dict:
-    ele = ele / num_words
+    tf_dict[ele] = tf_dict[ele] / num_words
 
   
   words_to_score = score_words(words_to_id, id_to_words, words_to_score, graph)
