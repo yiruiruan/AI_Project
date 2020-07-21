@@ -17,7 +17,7 @@ Use the following command to run a keyword extraction algorithm on text samples 
 ```
 python test.py <algo>
 ```
-`algo` can be `base` (default), `window`, `sentiment_pos`, `rake`, `textrank`.
+`algo` can be `base` (default), `window`, `tf_idf`, `sentiment_pos`, `sentiment_pos_tfidf`, `rake`, `textrank`.
 
 For example,
 ```

@@ -8,8 +8,9 @@ from window import extract as window
 from window_w_tf_idf import extract as window_w_tf_idf
 from tf_idf import extract as tf_idf
 from sentiment_pos import extract as sentiment_pos
+from sentiment_pos_tfidf import extract as sentiment_pos_tfidf
 
-ALGOS = {'rake', 'textrank', 'window', 'window_w_tf_idf', 'td_idf', 'sentiment_pos', 'base'} # 'base' is default
+ALGOS = {'rake', 'textrank', 'window', 'window_w_tf_idf', 'td_idf', 'sentiment_pos', 'sentiment_pos_tfidf', 'base'} # 'base' is default
 
 def results(algo=None):
   print("algorithm:", algo if algo in ALGOS else None)
@@ -43,6 +44,8 @@ def results(algo=None):
       extracted = tf_idf(doc)
     elif algo == 'sentiment_pos':
       extracted = sentiment_pos(doc)
+    elif algo == 'sentiment_pos_tfidf':
+      extracted = sentiment_pos_tfidf(doc)
     else:
       extracted = extract(doc)
 
