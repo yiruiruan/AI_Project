@@ -2,7 +2,6 @@ import re
 import sys
 import string
 import nltk
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from collections import Counter
 from common import num_top_words, stopwords
 
@@ -57,7 +56,7 @@ def score_words(words_to_id, id_to_words, words_to_score, graph, words_analysis)
   
   return words_to_score
 
-def extract(file_name):
+def extract(file_name, sid):
   f = open(file_name, "r")
   body = f.read()
   whitespace = re.compile(r"\s+")
@@ -76,8 +75,6 @@ def extract(file_name):
 
   # Map words to semtiment and part-of-speech
   words_analysis = {}
-
-  sid = SentimentIntensityAnalyzer()
 
   # Split by sentences
   sentences = split(body, sentence_splits)

@@ -3,6 +3,8 @@ import glob
 import re
 import spacy
 import pytextrank
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from datetime import datetime
 from base import extract
 from rake import rake
@@ -13,7 +15,7 @@ from tf_idf import extract as tf_idf
 from sentiment_pos import extract as sentiment_pos
 from sentiment_pos_tfidf import extract as sentiment_pos_tfidf
 
-ALGOS = {'rake', 'textrank', 'window', 'window_w_tf_idf', 'td_idf', 'sentiment_pos', 'sentiment_pos_tfidf', 'base'} # 'base' is default
+ALGOS = {'rake', 'textrank', 'window', 'window_w_tf_idf', 'tf_idf', 'sentiment_pos', 'sentiment_pos_tfidf', 'base'} # 'base' is default
 
 def results(algo=None):
   print("algorithm:", algo if algo in ALGOS else None)
@@ -30,6 +32,8 @@ def results(algo=None):
     # add PyTextRank to the spaCy pipeline
     tr = pytextrank.TextRank()
     nlp.add_pipe(tr.PipelineComponent, name="textrank", last=True)
+  elif algo == 'sentiment_pos' or algo == 'sentiment_pos_tfidf':
+    sid = SentimentIntensityAnalyzer()
 
   for i, key in enumerate(keys[:samples]):
     # get actual keywords
@@ -54,9 +58,9 @@ def results(algo=None):
     elif algo == 'tf_idf':
       extracted = tf_idf(doc)
     elif algo == 'sentiment_pos':
-      extracted = sentiment_pos(doc)
+      extracted = sentiment_pos(doc, sid)
     elif algo == 'sentiment_pos_tfidf':
-      extracted = sentiment_pos_tfidf(doc)
+      extracted = sentiment_pos_tfidf(doc, sid)
     else:
       extracted = extract(doc)
 
