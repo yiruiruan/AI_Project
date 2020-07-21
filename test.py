@@ -1,6 +1,9 @@
 import sys
 import glob
 import re
+import spacy
+import pytextrank
+from datetime import datetime
 from base import extract
 from rake import rake
 from textrank import textrank
@@ -20,6 +23,14 @@ def results(algo=None):
 
   keys = glob.glob('Inspec/keys/*.key')
   res = [0]*samples
+
+  if algo == 'textrank':
+    # load a spaCy model, depending on language, scale, etc.
+    nlp = spacy.load("en_core_web_sm")
+    # add PyTextRank to the spaCy pipeline
+    tr = pytextrank.TextRank()
+    nlp.add_pipe(tr.PipelineComponent, name="textrank", last=True)
+
   for i, key in enumerate(keys[:samples]):
     # get actual keywords
     key_file = open(key)
@@ -35,7 +46,7 @@ def results(algo=None):
     if algo == 'rake':
       extracted = rake(doc)
     elif algo == 'textrank':
-      extracted = textrank(doc)
+      extracted = textrank(doc, nlp)
     elif algo == 'window':
       extracted = window(doc)
     elif algo == 'window_w_tf_idf':
@@ -61,8 +72,11 @@ def results(algo=None):
   print("precision: {}, recall: {}, F-measure: {}".format(*avg_res))
 
 def main(argv):
+  start = datetime.now()
   algo = argv[1] if len(argv) > 1 else 'base'
   results(algo=algo)
+  end = datetime.now()
+  print("runtime:", end-start)
 
 if __name__ == "__main__":
   main(sys.argv)
